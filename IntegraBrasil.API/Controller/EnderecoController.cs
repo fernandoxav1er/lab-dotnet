@@ -1,6 +1,7 @@
 ﻿using IntegraBrasil.API.Interfaces;
 using IntegraBrasil.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace IntegraBrasil.API.Controller
@@ -16,6 +17,7 @@ namespace IntegraBrasil.API.Controller
         }
 
         [HttpGet("buscar/{cep}")]
+        [SwaggerOperation(Summary = "Retorna as informações do CEP informado", Description = "Get")]
         public async Task<IActionResult> BuscarEndereco([FromRoute] string cep)
         {
             var response = await _enderecoService.BuscarEndereco(cep);

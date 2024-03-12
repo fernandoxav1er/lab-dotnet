@@ -1,5 +1,6 @@
 using IntegraBrasil.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,7 @@ namespace IntegraBrasil.API.Controller
         }
 
         [HttpGet("/buscarTodosBancos")]
+        [SwaggerOperation(Summary = "Retorna todos os bancos brasileiros", Description = "Get")]
         public async Task<IActionResult> BuscarTodosBancos()
         {
             var response = await _bancoService.BuscarTodosBancos();
@@ -36,6 +38,7 @@ namespace IntegraBrasil.API.Controller
         }
 
         [HttpGet("/buscarBanco{codigoBanco}")]
+        [SwaggerOperation(Summary = "Retorna apenas um banco conforme o código informado", Description = "Get")]
         public async Task<IActionResult> BuscarBanco([RegularExpression("^[0-9]*$")] string codigoBanco)
         {
             var response = await _bancoService.BuscarBanco(codigoBanco);
