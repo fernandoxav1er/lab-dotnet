@@ -1,0 +1,11 @@
+﻿namespace FinShark.API.Dtos.Comentario
+{
+    public class ComentarioDto
+    {
+        public int Id { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public string Conteudo { get; set; } = string.Empty;
+        public DateTime CriadoEm { get; set; } = DateTime.Now;
+        public int? EstoqueId { get; set; }
+    }
+}
