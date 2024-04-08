@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab.ConsoleApp", "Lab.Conso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegraBrasil.API", "IntegraBrasil.API\IntegraBrasil.API.csproj", "{31A17380-3DF5-436C-8887-477B22B6DB23}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleContatos.MVC", "ControleContatos.MVC\ControleContatos.MVC.csproj", "{29F89C7D-0044-4D52-AA50-CEE0423FE231}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{31A17380-3DF5-436C-8887-477B22B6DB23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31A17380-3DF5-436C-8887-477B22B6DB23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31A17380-3DF5-436C-8887-477B22B6DB23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F89C7D-0044-4D52-AA50-CEE0423FE231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F89C7D-0044-4D52-AA50-CEE0423FE231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F89C7D-0044-4D52-AA50-CEE0423FE231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F89C7D-0044-4D52-AA50-CEE0423FE231}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
