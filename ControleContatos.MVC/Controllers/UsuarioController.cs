@@ -10,10 +10,12 @@ namespace ControleContatos.MVC.Controllers
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IContatoRepository _contatoRepository;
 
-        public UsuarioController(IUsuarioRepository usuarioRepository)
+        public UsuarioController(IUsuarioRepository usuarioRepository, IContatoRepository contatoRepository)
         {
-            _usuarioRepository = usuarioRepository;            
+            _usuarioRepository = usuarioRepository;
+            _contatoRepository = contatoRepository;
         }
 
         public IActionResult Index()
@@ -22,6 +24,11 @@ namespace ControleContatos.MVC.Controllers
             return View(usuarios);
         }
 
+        public IActionResult ListarContatosPorUsuarioId(int id)
+        {
+            List<ContatoModel> contatos = _contatoRepository.BuscarTodos(id);
+            return PartialView("_ContatosUsuario", contatos);
+        }
 
         public IActionResult Editar(int id)
         {

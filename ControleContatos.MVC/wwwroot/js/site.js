@@ -1,15 +1,28 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-// link do projeto inicial https://github.com/Acaciano/crud-contatos
-
-// Write your JavaScript code.
-//let table = new DataTable('#table-contatos');
-
-
+﻿
 $(document).ready(function () {
-    getDataTable('#table-contatos')
-    getDataTable('#table-usuarios')
-})
+    getDataTable('#table-contatos');
+    getDataTable('#table-usuarios');
+
+    //$(".btn-total-contatos").click(function () {
+    //    $("#modalContatosUsuario").modal();
+    //});
+
+    $('.btn-total-contatos').click(function () {
+        var usuarioId = $(this).attr('usuario-id');
+
+        $.ajax({
+            type: 'GET',
+            url: '/Usuario/ListarContatosPorUsuarioId/' + usuarioId,
+            success: function (result) {
+                $("#listaContatosUsuario").html(result);
+                $('#modalContatosUsuario').modal();
+                getDataTable('#table-contatos-usuario');
+            }
+        });
+    });
+
+});
+
 function getDataTable(id) {
     $(id).DataTable({
         "ordering": true,
@@ -44,3 +57,5 @@ function getDataTable(id) {
 $('.close-alert').click(function () {
     $('.alert').hide('hide');
 });
+
+

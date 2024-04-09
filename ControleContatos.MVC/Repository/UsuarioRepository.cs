@@ -1,6 +1,7 @@
 ﻿using ControleContatos.MVC.Data;
 using ControleContatos.MVC.Interfaces;
 using ControleContatos.MVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControleUsuarios.MVC.Repository
 {
@@ -13,7 +14,9 @@ namespace ControleUsuarios.MVC.Repository
         }
         public List<UsuarioModel> BuscarTodos()
         {
-            return _bancoContext.Usuarios.ToList();
+            return _bancoContext.Usuarios
+                .Include(x => x.Contatos)
+                .ToList();
         }
         public UsuarioModel Adicionar(UsuarioModel usuario)
         {
