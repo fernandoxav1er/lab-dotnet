@@ -3,10 +3,6 @@ $(document).ready(function () {
     getDataTable('#table-contatos');
     getDataTable('#table-usuarios');
 
-    //$(".btn-total-contatos").click(function () {
-    //    $("#modalContatosUsuario").modal();
-    //});
-
     $('.btn-total-contatos').click(function () {
         var usuarioId = $(this).attr('usuario-id');
 

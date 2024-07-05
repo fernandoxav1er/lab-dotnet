@@ -13,14 +13,14 @@ namespace FinShark.API.Repository
             _context = context;
         }
 
-        public async Task<Comentario?> CreateAsync(Comentario comentarioModel)
+        public async Task<Comentario?> Create(Comentario comentarioModel)
         {
             await _context.Comentarios.AddAsync(comentarioModel);
             await _context.SaveChangesAsync();
             return comentarioModel;
         }
 
-        public async Task<Comentario?> DeleteAsync(int id)
+        public async Task<Comentario?> Delete(int id)
         {
             var commentModel = await _context.Comentarios.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -32,11 +32,11 @@ namespace FinShark.API.Repository
             return commentModel;
         }
 
-        public async Task<List<Comentario>> GetAllAsync()
+        public async Task<List<Comentario>> GetAll()
         {
             return await _context.Comentarios.ToListAsync();
         }
-        public async Task<Comentario?> GetByIdAsync(int id)
+        public async Task<Comentario?> GetById(int id)
         {
             return await _context.Comentarios.FindAsync(id);
         }

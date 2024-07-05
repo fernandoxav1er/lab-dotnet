@@ -2,6 +2,7 @@
 
 namespace FinShark.API.Models
 {
+    [Table("Estoques")]
     public class Estoque
     {
         public int Id { get; set; }
@@ -14,5 +15,7 @@ namespace FinShark.API.Models
         public string Industria { get; set; } = string.Empty;
         public long Valuation { get; set; }
         public List<Comentario> Comentarios { get; set; } = new List<Comentario>();
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
+
     }
 }
