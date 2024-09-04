@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  catalogo.api:
+    image: ${DOCKER_REGISTRY-}catalogoapi
+    build:
+      context: .
+      dockerfile: Catalogo.API/Dockerfile

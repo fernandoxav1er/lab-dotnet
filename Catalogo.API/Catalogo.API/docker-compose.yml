@@ -1,0 +1,37 @@
+services:
+    
+  api:
+    container_name: catalogo-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4652:8080 
+      - 4651:8081 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    networks:
+      - catalogo-networks  
+        
+  db:
+    image: mysql/mysql-server:latest
+    container_name: catalogo_dbmysql
+    restart: always
+    environment:
+        - MYSQL_ROOT_PASSWORD=admin
+        - MYSQL_ROOT_HOST=%
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    networks:
+      - catalogo-networks   
+
+volumes:
+  mysql-volume:
+
+networks:
+  catalogo-networks:
+    driver: bridge
