@@ -7,9 +7,8 @@ namespace Catalogo.API.Models;
 [Table("Produtos")]
 public class Produto : IValidatableObject
 {
-    [JsonIgnore]
-    public Categoria? Categoria { get; set; }
-    public int CategoriaId { get; set; }
+    [Key]
+    public int ProdutoId { get; set; }
     public DateTime DataCadastro { get; set; }
     [Required]
     [StringLength(300)]
@@ -24,8 +23,9 @@ public class Produto : IValidatableObject
     [Required]
     [Column(TypeName = "decimal(10,2)")]
     public decimal Preco { get; set; }
-    [Key]
-    public int ProdutoId { get; set; }
+    [JsonIgnore]
+    public Categoria? Categoria { get; set; }
+    public int CategoriaId { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

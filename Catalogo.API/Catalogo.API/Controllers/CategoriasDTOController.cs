@@ -1,19 +1,20 @@
 ﻿using Catalogo.API.Controllersl;
 using Catalogo.API.DTOs;
+using Catalogo.API.DTOs.Mappings;
 using Catalogo.API.Interfaces;
 using Catalogo.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalogo.API.Controllers;
 
-[Route("api/categorias")]
+[Route("api/categorias-dto")]
 [ApiController]
-public class CategoriasController : ControllerBase
+public class CategoriasDTOController : ControllerBase
 {
     private readonly ILogger _logger;
     private readonly IUnitOfWork _uof;
 
-    public CategoriasController(ILogger<ProdutosController> logger,
+    public CategoriasDTOController(ILogger<ProdutosController> logger,
                                 IUnitOfWork uof)
     {
         _logger = logger;
@@ -25,8 +26,8 @@ public class CategoriasController : ControllerBase
     {
         var categorias = await _uof.CategoriaRepository.GetAllAsync();
 
-        if (categorias is null) return NotFound();
-        
+        if (!categorias.Any()) return NotFound();
+
         var categoriasDto = new List<CategoriaDTO>();
 
         foreach (var categoria in categorias)
@@ -46,7 +47,7 @@ public class CategoriasController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
     {
-        var categoria = await _uof.CategoriaRepository.GetAsync(c=> c.CategoriaId == id);
+        var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -54,14 +55,14 @@ public class CategoriasController : ControllerBase
             return NotFound("Categoria não encontrada");
         }
 
-        var categoriaDTO = new CategoriaDTO()
-        {
-            CategoriaId = categoria.CategoriaId,
-            Nome = categoria.Nome,
-            ImagemmUrl = categoria.ImagemmUrl
-        };
+        //var categoriaDTO = new CategoriaDTO()
+        //{
+        //    CategoriaId = categoria.CategoriaId,
+        //    Nome = categoria.Nome,
+        //    ImagemmUrl = categoria.ImagemmUrl
+        //};
 
-        return Ok(categoriaDTO);
+        return Ok(categoria.ToCategoiaDTO());
     }
 
     [HttpPost]
@@ -73,12 +74,14 @@ public class CategoriasController : ControllerBase
             return BadRequest("Dados inválidos...");
         }
 
-        var categoria = new Categoria()
-        {
-            ImagemmUrl= categoriaDto.ImagemmUrl,
-            Nome = categoriaDto.Nome,
-            CategoriaId = categoriaDto.CategoriaId
-        };
+        //var categoria = new Categoria()
+        //{
+        //    ImagemmUrl= categoriaDto.ImagemmUrl,
+        //    Nome = categoriaDto.Nome,
+        //    CategoriaId = categoriaDto.CategoriaId
+        //};
+
+        var categoria = categoriaDto.ToCategoria();
 
         var categoriaCriada = await _uof.CategoriaRepository.Create(categoria);
         await _uof.CommitAsync();
@@ -115,7 +118,7 @@ public class CategoriasController : ControllerBase
             CategoriaId = categoriaAtualizada.CategoriaId
         };
 
-        return Ok(categoriaAtualizadaDto); 
+        return Ok(categoriaAtualizadaDto);
     }
 
     [HttpDelete("{id}")]

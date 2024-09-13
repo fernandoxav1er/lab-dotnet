@@ -1,6 +1,9 @@
 using Catalogo.API.Context;
 using Catalogo.API.Extensions;
 using Catalogo.API.Filters;
+using Catalogo.API.Interfaces;
+using Catalogo.API.Interfaces.Repositories;
+using Catalogo.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -17,11 +20,13 @@ builder.Services.AddControllers(options =>{options.Filters.Add(typeof(ApiExcepti
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 /* Log por filtros na controller, estoura na console */
 //builder.Services.AddScoped<ApiLoggingFilter>();
-
-/* Log em txt externo da api */
-//builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration{LogLevel = LogLevel.Debug}));
 
 var app = builder.Build();
 

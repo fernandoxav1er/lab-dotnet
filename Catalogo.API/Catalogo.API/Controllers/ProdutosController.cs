@@ -1,7 +1,6 @@
-﻿using Catalogo.API.Context;
+﻿using Catalogo.API.Interfaces;
 using Catalogo.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Catalogo.API.Controllersl;
 
@@ -9,41 +8,45 @@ namespace Catalogo.API.Controllersl;
 [ApiController]
 public class ProdutosController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    private readonly ILogger _logger;
+    private readonly IUnitOfWork _uof;
 
-    public ProdutosController(AppDbContext context, ILogger<ProdutosController> logger)
+    public ProdutosController(IUnitOfWork uof)
     {
-        _context = context;
-        _logger = logger;
+        _uof = uof;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
     {
-        return await _context.Produtos.AsNoTracking().ToListAsync();
+        var produtos = await _uof.ProdutoRepository.GetAllAsync();
+        if (produtos is null) return NotFound();
+        return Ok(produtos);
     }
 
     [HttpGet("{id:int:min(1)}")]
     public async Task<ActionResult<Produto>> GetProduto(int id)
     {
-        //_logger.LogInformation("============ ProdutosController - registrando logger ===========");
-
-        var produto = await _context.Produtos.FindAsync(id);
-
+        var produto = await _uof.ProdutoRepository.GetAsync(c => c.ProdutoId == id);
         if (produto == null) return NotFound("Produto não encontrado");
-
         return produto;
+    }
+
+    [HttpGet("produtos-categoria/{id}")]
+    public async Task<ActionResult<IEnumerable<Produto>>> GetProdutosCategoria (int id)
+    {
+        var produtos = await _uof.ProdutoRepository.GetProdutosPorCategoria(id);
+        if (produtos is null) return NotFound();
+        return Ok(produtos);
     }
 
     [HttpPost]
     public async Task<ActionResult<Produto>> PostProduto(Produto produto)
     {
-        if (!ModelState.IsValid) return BadRequest();
+        if (produto is null) return BadRequest();
 
-        _context.Produtos.Add(produto);
-        await _context.SaveChangesAsync();
-
+        var novoProduto = await _uof.ProdutoRepository.Create(produto);
+        await _uof.CommitAsync();
+        
         return CreatedAtAction("GetProduto", new { id = produto.ProdutoId }, produto);
     }
 
@@ -52,22 +55,21 @@ public class ProdutosController : ControllerBase
     {
         if (id != produto.ProdutoId) return BadRequest();
 
-        _context.Entry(produto).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        var produtoAtualizado = await _uof.ProdutoRepository.Update(produto);
+        await _uof.CommitAsync();
 
-        return Ok(produto);
+        return Ok(produtoAtualizado);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteProduto(int id)
     {
-        var produto = await _context.Produtos.FindAsync(id);
+        var produto = await _uof.ProdutoRepository.GetAsync(p => p.ProdutoId == id);
+        if (produto is null) return NotFound();
 
-        if (produto == null) return NotFound("Produto não localizado");
+        var produtoDeletado = await _uof.ProdutoRepository.Delete(produto);
+        await _uof.CommitAsync();
 
-        _context.Produtos.Remove(produto);
-        await _context.SaveChangesAsync();
-
-        return Ok(produto);
+        return Ok($"Produto de id={id} foi excluído");
     }
 }
