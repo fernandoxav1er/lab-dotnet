@@ -90,7 +90,7 @@ public class ProdutosController : ControllerBase
         return Ok(produtoAtualizadoDto);
     }
 
-    [HttpPatch("{id}/UpdatePartial")]
+    [HttpPatch("update-partial/{id}")]
     public async Task<ActionResult<ProdutoDTOUpdateResponse>> Patch(int id,
     JsonPatchDocument<ProdutoDTOUpdateRequest> patchProdutoDto)
     {
