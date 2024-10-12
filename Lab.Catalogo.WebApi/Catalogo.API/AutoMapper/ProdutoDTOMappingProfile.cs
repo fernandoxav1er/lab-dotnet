@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
+using Catalogo.API.DTOs;
 using Catalogo.API.Models;
 
-namespace Catalogo.API.DTOs.Mappings
+namespace Catalogo.API.AutoMapper
 {
     public class ProdutoDTOMappingProfile : Profile
     {

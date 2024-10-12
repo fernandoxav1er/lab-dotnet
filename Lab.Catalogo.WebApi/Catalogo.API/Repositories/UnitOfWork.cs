@@ -1,6 +1,5 @@
 ﻿using Catalogo.API.Context;
 using Catalogo.API.Interfaces;
-using Catalogo.API.Interfaces.Repositories;
 
 namespace Catalogo.API.Repositories;
 

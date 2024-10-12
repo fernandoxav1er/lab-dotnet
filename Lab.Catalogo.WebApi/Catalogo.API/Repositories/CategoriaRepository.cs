@@ -1,7 +1,6 @@
 ﻿using Catalogo.API.Context;
-using Catalogo.API.Interfaces.Repositories;
+using Catalogo.API.Interfaces;
 using Catalogo.API.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Catalogo.API.Repositories;
 

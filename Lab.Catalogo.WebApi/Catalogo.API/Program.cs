@@ -1,9 +1,8 @@
+using Catalogo.API.AutoMapper;
 using Catalogo.API.Context;
-using Catalogo.API.DTOs.Mappings;
 using Catalogo.API.Extensions;
 using Catalogo.API.Filters;
 using Catalogo.API.Interfaces;
-using Catalogo.API.Interfaces.Repositories;
 using Catalogo.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;

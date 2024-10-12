@@ -1,10 +1,11 @@
-﻿using Catalogo.API.Models;
+﻿using Catalogo.API.DTOs;
+using Catalogo.API.Models;
 
-namespace Catalogo.API.DTOs.Mappings;
+namespace Catalogo.API.Extensions;
 
 public static class CategoriaDTOMappingExtensions
 {
-    public static CategoriaDTO? ToCategoiaDTO(this Categoria categoria)
+    public static CategoriaDTO? ToCategoriaDTO(this Categoria categoria)
     {
         if (categoria is null) return null;
 

@@ -1,139 +1,141 @@
-﻿using Catalogo.API.Controllersl;
-using Catalogo.API.DTOs;
+﻿using Catalogo.API.DTOs;
 using Catalogo.API.Interfaces;
 using Catalogo.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Catalogo.API.Extensions;
 
-namespace Catalogo.API.Controllers;
-
-[Route("api/categorias")]
-[ApiController]
-public class CategoriasController : ControllerBase
+namespace Catalogo.API.Controllers
 {
-    private readonly ILogger _logger;
-    private readonly IUnitOfWork _uof;
-
-    public CategoriasController(ILogger<ProdutosController> logger,
-                                IUnitOfWork uof)
+    [Route("api/categorias")]
+    [ApiController]
+    public class CategoriasController : ControllerBase
     {
-        _logger = logger;
-        _uof = uof;
-    }
+        private readonly ILogger _logger;
+        private readonly IUnitOfWork _uof;
+        private readonly IMapper _mapper;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategorias()
-    {
-        var categorias = await _uof.CategoriaRepository.GetAllAsync();
-
-        if (categorias is null) return NotFound();
-        
-        var categoriasDto = new List<CategoriaDTO>();
-
-        foreach (var categoria in categorias)
+        public CategoriasController(ILogger<CategoriasController> logger,
+                                           IUnitOfWork uof,
+                                           IMapper mapper)
         {
-            var categoriaDto = new CategoriaDTO()
+            _logger = logger;
+            _uof = uof;
+            _mapper = mapper;
+        }
+
+        [HttpGet("mapeamento-manual")]
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasManual()
+        {
+            var categorias = await _uof.CategoriaRepository.GetAllAsync();
+
+            if (!categorias.Any()) return NotFound();
+
+            var categoriasDto = new List<CategoriaDTO>();
+
+            foreach (var categoria in categorias)
             {
-                CategoriaId = categoria.CategoriaId,
-                Nome = categoria.Nome,
-                ImagemmUrl = categoria.ImagemmUrl
-            };
-            categoriasDto.Add(categoriaDto);
+                var categoriaDto = new CategoriaDTO()
+                {
+                    CategoriaId = categoria.CategoriaId,
+                    Nome = categoria.Nome,
+                    ImagemmUrl = categoria.ImagemmUrl
+                };
+                categoriasDto.Add(categoriaDto);
+            }
+
+            return Ok(categoriasDto);
         }
 
-        return Ok(categoriasDto);
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
-    {
-        var categoria = await _uof.CategoriaRepository.GetAsync(c=> c.CategoriaId == id);
-
-        if (categoria is null)
+        [HttpGet("mapeamento-metodos-extensao")]
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasExternal()
         {
-            _logger.LogWarning("Categoria não encontrada");
-            return NotFound("Categoria não encontrada");
+            var categorias = await _uof.CategoriaRepository.GetAllAsync();
+
+            if (!categorias.Any()) return NotFound();
+
+            var categoriasDto = categorias.Select(c => c.ToCategoriaDTO()).ToList();
+
+            return Ok(categoriasDto);
         }
 
-        var categoriaDTO = new CategoriaDTO()
+        [HttpGet("mapeamento-automapper")]
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasAutoMapper()
         {
-            CategoriaId = categoria.CategoriaId,
-            Nome = categoria.Nome,
-            ImagemmUrl = categoria.ImagemmUrl
-        };
+            var categorias = await _uof.CategoriaRepository.GetAllAsync();
 
-        return Ok(categoriaDTO);
-    }
+            if (!categorias.Any()) return NotFound();
 
-    [HttpPost]
-    public async Task<ActionResult<CategoriaDTO>> Post(CategoriaDTO categoriaDto)
-    {
-        if (categoriaDto is null)
-        {
-            _logger.LogWarning("Dados inválidos...");
-            return BadRequest("Dados inválidos...");
+            var categoriasDto = _mapper.Map<IEnumerable<CategoriaDTO>>(categorias);
+
+            return Ok(categoriasDto);
         }
 
-        var categoria = new Categoria()
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
         {
-            ImagemmUrl= categoriaDto.ImagemmUrl,
-            Nome = categoriaDto.Nome,
-            CategoriaId = categoriaDto.CategoriaId
-        };
+            var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
 
-        var categoriaCriada = await _uof.CategoriaRepository.Create(categoria);
-        await _uof.CommitAsync();
+            if (categoria is null)
+            {
+                _logger.LogWarning("Categoria não encontrada");
+                return NotFound("Categoria não encontrada");
+            }
 
-        var novaCategoriaDto = new CategoriaDTO()
+            var categoriaDto = _mapper.Map<CategoriaDTO>(categoria);
+
+            return Ok(categoriaDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CategoriaDTO>> Post(CategoriaDTO categoriaDto)
         {
-            ImagemmUrl = categoriaCriada.ImagemmUrl,
-            Nome = categoriaCriada.Nome,
-            CategoriaId = categoriaCriada.CategoriaId
-        };
+            if (categoriaDto is null)
+            {
+                _logger.LogWarning("Dados inválidos...");
+                return BadRequest("Dados inválidos...");
+            }
 
-        return CreatedAtAction("GetCategoria", new { id = novaCategoriaDto.CategoriaId }, novaCategoriaDto);
-    }
+            var categoria = _mapper.Map<Categoria>(categoriaDto);
 
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult<CategoriaDTO>> Put(int id, CategoriaDTO categoriaDto)
-    {
-        if (id != categoriaDto.CategoriaId) return BadRequest();
+            var categoriaCriada = await _uof.CategoriaRepository.Create(categoria);
+            await _uof.CommitAsync();
 
-        var categoria = new Categoria()
+            var novaCategoriaDto = _mapper.Map<CategoriaDTO>(categoriaCriada);
+
+            return CreatedAtAction("GetCategoria", new { id = novaCategoriaDto.CategoriaId }, novaCategoriaDto);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<CategoriaDTO>> Put(int id, CategoriaDTO categoriaDto)
         {
-            ImagemmUrl = categoriaDto.ImagemmUrl,
-            Nome = categoriaDto.Nome,
-            CategoriaId = categoriaDto.CategoriaId
-        };
+            if (id != categoriaDto.CategoriaId) return BadRequest();
 
-        var categoriaAtualizada = await _uof.CategoriaRepository.Update(categoria);
-        await _uof.CommitAsync();
+            var categoria = _mapper.Map<Categoria>(categoriaDto);
 
-        var categoriaAtualizadaDto = new CategoriaDTO()
+            var categoriaAtualizada = await _uof.CategoriaRepository.Update(categoria);
+            await _uof.CommitAsync();
+
+            var categoriaAtualizadaDto = _mapper.Map<CategoriaDTO>(categoriaAtualizada);
+
+            return Ok(categoriaAtualizadaDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<CategoriaDTO>> Delete(int id)
         {
-            ImagemmUrl = categoriaAtualizada.ImagemmUrl,
-            Nome = categoriaAtualizada.Nome,
-            CategoriaId = categoriaAtualizada.CategoriaId
-        };
+            var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
+            if (categoria is null) return NotFound();
 
-        return Ok(categoriaAtualizadaDto); 
-    }
+            var categoriaExcluida = await _uof.CategoriaRepository.Delete(categoria);
+            await _uof.CommitAsync();
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<CategoriaDTO>> Delete(int id)
-    {
-        var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
-        if (categoria is null) return NotFound();
+            var categoriaExcluidaDto = _mapper.Map<CategoriaDTO>(categoriaExcluida);
 
-        var categoriaExcluida = await _uof.CategoriaRepository.Delete(categoria);
-        await _uof.CommitAsync();
-
-        var categoriaExcluidaDto = new CategoriaDTO()
-        {
-            ImagemmUrl = categoriaExcluida.ImagemmUrl,
-            Nome = categoriaExcluida.Nome,
-            CategoriaId = categoriaExcluida.CategoriaId
-        };
-
-        return Ok(categoriaExcluidaDto);
+            return Ok(categoriaExcluidaDto);
+        }
     }
 }
