@@ -1,6 +1,5 @@
 ﻿using Catalogo.API.Models;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Net;
 
 namespace Catalogo.API.Extensions;

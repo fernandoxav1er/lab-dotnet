@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Catalogo.API.DTOs
+namespace Catalogo.API.Models
 {
     public class ProdutoDTO
     {

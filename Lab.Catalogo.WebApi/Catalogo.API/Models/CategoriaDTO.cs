@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Catalogo.API.DTOs;
+namespace Catalogo.API.Models;
 
 public class CategoriaDTO
 {
@@ -9,7 +9,7 @@ public class CategoriaDTO
     [Required]
     [StringLength(80)]
     public string? Nome { get; set; }
-    
+
     [Required]
     [StringLength(300)]
     public string? ImagemmUrl { get; set; }

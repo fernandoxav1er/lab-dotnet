@@ -1,9 +1,6 @@
-﻿using Catalogo.API.DTOs;
-using Catalogo.API.Models;
+﻿namespace Catalogo.API.Models;
 
-namespace Catalogo.API.Extensions;
-
-public static class CategoriaDTOMappingExtensions
+public static class CategoriaDTOMapping
 {
     public static CategoriaDTO? ToCategoriaDTO(this Categoria categoria)
     {

@@ -29,14 +29,14 @@ public class Produto : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (!string.IsNullOrEmpty(this.Nome))
+        if (!string.IsNullOrEmpty(Nome))
         {
-            var primeiraLetra = this.Nome[0].ToString();
+            var primeiraLetra = Nome[0].ToString();
             if (primeiraLetra != primeiraLetra.ToUpper())
             {
                 yield return
                     new ValidationResult("A primeira letra do produto deve ser maiúscula!",
-                        new[] { nameof(this.Nome) }
+                        new[] { nameof(Nome) }
                     );
             }
         }

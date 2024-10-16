@@ -1,5 +1,6 @@
 ﻿using Catalogo.API.Context;
 using Catalogo.API.Interfaces;
+using Catalogo.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -17,6 +18,11 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _appDbContext.Set<T>().AsNoTracking().ToListAsync();
+    }
+
+    public IQueryable<T> GetAllPagination()
+    {
+        return _appDbContext.Set<T>().AsQueryable();
     }
 
     public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)

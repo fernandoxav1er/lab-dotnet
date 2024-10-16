@@ -1,5 +1,4 @@
 using AutoMapper;
-using Catalogo.API.DTOs;
 using Catalogo.API.Models;
 
 namespace Catalogo.API.AutoMapper

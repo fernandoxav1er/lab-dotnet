@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Catalogo.API.DTOs
+namespace Catalogo.API.Models
 {
     public class ProdutoDTOUpdateRequest : IValidatableObject
     {
@@ -16,7 +16,7 @@ namespace Catalogo.API.DTOs
         {
             if (DataCadastro.Date <= DateTime.Now.Date)
             {
-                yield return new ValidationResult("A Data deve ser maior que a data atual.", new[] { nameof(this.DataCadastro) });
+                yield return new ValidationResult("A Data deve ser maior que a data atual.", new[] { nameof(DataCadastro) });
             }
         }
     }
