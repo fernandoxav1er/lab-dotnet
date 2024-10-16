@@ -161,4 +161,26 @@ public class ProdutosController : ControllerBase
 
         return Ok(produtosDto);
     }
+
+    [HttpGet("filter-produto-preco-pagination")]
+    public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutosByPreco([FromQuery] ProdutosFiltroPreco produtosParameters)
+    {
+        var produtos = await _uof.ProdutoRepository.ObterProdutosFiltroPrecoPaginados(produtosParameters);
+
+        var metadata = new
+        {
+            produtos.TotalCount,
+            produtos.PageSize,
+            produtos.CurrentPage,
+            produtos.TotalPages,
+            produtos.HasNext,
+            produtos.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+
+        return Ok(produtosDto);
+    }
 }

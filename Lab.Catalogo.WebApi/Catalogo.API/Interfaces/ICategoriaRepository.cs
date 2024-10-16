@@ -5,4 +5,5 @@ namespace Catalogo.API.Interfaces;
 public interface ICategoriaRepository : IRepository<Categoria>
 {
     Task<PagedList<Categoria>> ObterCategoriaPaginados(CategoriaParametersRequest paginationParameters);
+    Task<PagedList<Categoria>> ObterCategoriasFiltroNomePaginados(CategoriasFiltroNome paginationParameters);
 }

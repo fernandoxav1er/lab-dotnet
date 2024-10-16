@@ -20,7 +20,7 @@ public class Repository<T> : IRepository<T> where T : class
         return await _appDbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 
-    public IQueryable<T> GetAllPagination()
+    public IQueryable<T> GetAll()
     {
         return _appDbContext.Set<T>().AsQueryable();
     }

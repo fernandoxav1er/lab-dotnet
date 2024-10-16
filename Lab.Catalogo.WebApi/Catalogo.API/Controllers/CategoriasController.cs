@@ -156,4 +156,27 @@ public class CategoriasController : ControllerBase
 
         return Ok(categoriasDto);
     }
+
+
+    [HttpGet("filter-categoria-nome-pagination")]
+    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByNome([FromQuery] CategoriasFiltroNome categoriaParameters)
+    {
+        var categorias = await _uof.CategoriaRepository.ObterCategoriasFiltroNomePaginados(categoriaParameters);
+
+        var metadata = new
+        {
+            categorias.TotalCount,
+            categorias.PageSize,
+            categorias.CurrentPage,
+            categorias.TotalPages,
+            categorias.HasNext,
+            categorias.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        var categoriasDto = _mapper.Map<IEnumerable<CategoriaDTO>>(categorias);
+
+        return Ok(categoriasDto);
+    }
 }
